@@ -1,4 +1,4 @@
-import 'dart:convert'; // Para converter a resposta em JSON
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 const api = "http://127.0.0.1:3000";
