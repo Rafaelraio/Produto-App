@@ -90,111 +90,122 @@ class _ProdutoDetalhesState extends State<ProdutoDetalhes> {
         backgroundColor: Colors.white,
         title: Text("Detalhes Produto ${widget.produtoId}"),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                const Text("Desc: "),
-                Expanded(
-                    child: TextField(
-                  controller: descController,
-                ))
-              ],
-            ),
-            Row(
-              children: [
-                const Text("Preço: "),
-                Expanded(
-                    child: TextField(
-                  controller: precoController,
-                  keyboardType: TextInputType.number,
-                ))
-              ],
-            ),
-            Row(
-              children: [
-                const Text("Estoque: "),
-                Expanded(
-                    child: TextField(
-                  controller: estoqueController,
-                  keyboardType: TextInputType.number,
-                ))
-              ],
-            ),
-            Row(
-              children: [
-                const Text("Data:"),
-                Expanded(
-                    child: TextField(
-                  controller: dataController,
-                  readOnly: true,
-                  onTap: () async {
-                    DateTime? data = await showDatePicker(
-                        context: context,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
-                        initialDate: DateTime.now());
-                    if (data != null) {
-                      String formattedDate =
-                          "${data.year}-${data.month}-${data.day}";
-                      dataController.text = formattedDate;
-                    }
-                  },
-                ))
-              ],
-            ),
-            Row(
-              children: [
-                ElevatedButton(
-                    onPressed: () async {
-                      bool x = await _mostrarConfirmar(context, "Deletar?");
-                      if (x == true) {
-                        nomeController.clear();
-                        descController.clear();
-                        estoqueController.clear();
-                        dataController.clear();
-                        deletarProdutoPorId(widget.produtoId);
-                        Navigator.pop(context);
+      body: Container(
+        padding: EdgeInsets.all(20),
+        child: Center(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  const Text("Desc: "),
+                  Expanded(
+                      child: TextField(
+                    controller: descController,
+                  ))
+                ],
+              ),
+              Row(
+                children: [
+                  const Text("Preço: "),
+                  Expanded(
+                      child: TextField(
+                    controller: precoController,
+                    keyboardType: TextInputType.number,
+                  ))
+                ],
+              ),
+              Row(
+                children: [
+                  const Text("Estoque: "),
+                  Expanded(
+                      child: TextField(
+                    controller: estoqueController,
+                    keyboardType: TextInputType.number,
+                  ))
+                ],
+              ),
+              Row(
+                children: [
+                  const Text("Data:"),
+                  Expanded(
+                      child: TextField(
+                    controller: dataController,
+                    readOnly: true,
+                    onTap: () async {
+                      DateTime? data = await showDatePicker(
+                          context: context,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                          initialDate: DateTime.now());
+                      if (data != null) {
+                        String formattedDate =
+                            "${data.year}-${data.month}-${data.day}";
+                        dataController.text = formattedDate;
                       }
-                      
                     },
-                    child: const Text("deletar")),
-                ElevatedButton(
-                    onPressed: () async {
-                      String desc = descController.text;
-                      String preco = precoController.text;
-                      String estoque = estoqueController.text;
-                      String data = dataController.text;
-                      num? precoNum = num.tryParse(preco);
-                      num? estoqueNum = int.tryParse(estoque);
-
-                      if (desc == "" ||
-                          preco == "" ||
-                          estoque == "" ||
-                          data == "") {
-                        _mostrarErro(context, "Nenhum campo deve estar vazio");
-                      } else if (precoNum == null || estoqueNum == null) {
-                        _mostrarErro(
-                            context, "Preço e estoque devem ser numeros, sendo que estoque deve ser um numero inteiro");
-                      } else {
-                        bool x = await _mostrarConfirmar(context, "Atualizar?");
+                  ))
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                      onPressed: () async {
+                        bool x = await _mostrarConfirmar(context, "Deletar?");
                         if (x == true) {
-                          print(preco);
-                          print(desc);
-                          print(estoque);
-                          print(data);
-                          atualizarProdutoPorId(
-                              widget.produtoId, desc, preco, estoque, data);
-                        } else {
-                          _carregarDetalhesProduto(widget.produtoId);
+                          nomeController.clear();
+                          descController.clear();
+                          estoqueController.clear();
+                          dataController.clear();
+                          deletarProdutoPorId(widget.produtoId);
+                          Navigator.pop(context);
                         }
-                      }
-                    },
-                    child: const Text("Atualizar"))
-              ],
-            )
-          ],
+                      },
+                      child: const Text("deletar")),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  ElevatedButton(
+                      onPressed: () async {
+                        String desc = descController.text;
+                        String preco = precoController.text;
+                        String estoque = estoqueController.text;
+                        String data = dataController.text;
+                        num? precoNum = num.tryParse(preco);
+                        num? estoqueNum = int.tryParse(estoque);
+
+                        if (desc == "" ||
+                            preco == "" ||
+                            estoque == "" ||
+                            data == "") {
+                          _mostrarErro(
+                              context, "Nenhum campo deve estar vazio");
+                        } else if (precoNum == null || estoqueNum == null) {
+                          _mostrarErro(context,
+                              "Preço e estoque devem ser numeros, sendo que estoque deve ser um numero inteiro");
+                        } else {
+                          bool x =
+                              await _mostrarConfirmar(context, "Atualizar?");
+                          if (x == true) {
+                            print(preco);
+                            print(desc);
+                            print(estoque);
+                            print(data);
+                            atualizarProdutoPorId(
+                                widget.produtoId, desc, preco, estoque, data);
+                          } else {
+                            _carregarDetalhesProduto(widget.produtoId);
+                          }
+                        }
+                      },
+                      child: const Text("Atualizar"))
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

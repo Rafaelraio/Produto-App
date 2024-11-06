@@ -67,47 +67,50 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
           ]),
-      body: Center(
-        child: FutureBuilder<List<dynamic>>(
-          future: _produtosFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-              return Text('Erro ao listar os produtos: ${snapshot.error}');
-            } else if (snapshot.hasData) {
-              var produtos = snapshot.data!;
-              return ListView.builder(
-                itemCount: produtos.length,
-                itemBuilder: (context, index) {
-                  var produto = produtos[index];
-                  return ListTile(
-                    onTap: () async {
-                      await Navigator.pushNamed(
-                        context,
-                        '/produto-datalhes',
-                        arguments: produto['id'].toString(),
-                      );
-                      _recarregarProdutos();
-                    },
-                    title: Text('Id: ${produto['id'].toString()}'),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Descrição :${produto['descricao'].toString()}'),
-                        Text('Preço: ${produto['preco'].toString()}'),
-                        Text('Estoque: ${produto['estoque'].toString()}'),
-                        Text(
-                            'Data: ${DateFormat('dd/MM/yyyy - HH:mm').format(DateTime.parse(produto['data'].toString()))}')
-                      ],
-                    ),
-                  );
-                },
-              );
-            } else {
-              return const Text('Nenhum produto encontrado');
-            }
-          },
+      body: Container(
+        padding: EdgeInsets.all(20),
+        child: Center(
+          child: FutureBuilder<List<dynamic>>(
+            future: _produtosFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Erro ao listar os produtos: ${snapshot.error}');
+              } else if (snapshot.hasData) {
+                var produtos = snapshot.data!;
+                return ListView.builder(
+                  itemCount: produtos.length,
+                  itemBuilder: (context, index) {
+                    var produto = produtos[index];
+                    return ListTile(
+                      onTap: () async {
+                        await Navigator.pushNamed(
+                          context,
+                          '/produto-datalhes',
+                          arguments: produto['id'].toString(),
+                        );
+                        _recarregarProdutos();
+                      },
+                      title: Text('Id: ${produto['id'].toString()}'),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Descrição :${produto['descricao'].toString()}'),
+                          Text('Preço: ${produto['preco'].toString()}'),
+                          Text('Estoque: ${produto['estoque'].toString()}'),
+                          Text(
+                              'Data: ${DateFormat('dd/MM/yyyy - HH:mm').format(DateTime.parse(produto['data'].toString()))}')
+                        ],
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return const Text('Nenhum produto encontrado');
+              }
+            },
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
