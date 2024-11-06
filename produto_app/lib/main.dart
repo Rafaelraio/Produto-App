@@ -96,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Descrição :${produto['descricao'].toString()}'),
+                          Text('Descrição: ${produto['descricao'].toString()}'),
                           Text('Preço: ${produto['preco'].toString()}'),
                           Text('Estoque: ${produto['estoque'].toString()}'),
                           Text(
