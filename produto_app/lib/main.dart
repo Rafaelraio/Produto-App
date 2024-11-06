@@ -100,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           Text('Preço: ${produto['preco'].toString()}'),
                           Text('Estoque: ${produto['estoque'].toString()}'),
                           Text(
-                              'Data: ${DateFormat('dd/MM/yyyy - HH:mm').format(DateTime.parse(produto['data'].toString()))}')
+                              'Data: ${DateFormat('yyyy-MM-dd').format(DateTime.parse(produto['data'].toString()))}')
                         ],
                       ),
                     );
