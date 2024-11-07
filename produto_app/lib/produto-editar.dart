@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:produto_app/HTTP/produto.dart';
 
-class ProdutoDetalhes extends StatefulWidget {
+class ProdutoEditar extends StatefulWidget {
   final String produtoId;
 
-  const ProdutoDetalhes({Key? key, required this.produtoId}) : super(key: key);
+  const ProdutoEditar({Key? key, required this.produtoId}) : super(key: key);
 
   @override
-  State<ProdutoDetalhes> createState() => _ProdutoDetalhesState();
+  State<ProdutoEditar> createState() => _ProdutoEditarState();
 }
 
-class _ProdutoDetalhesState extends State<ProdutoDetalhes> {
+class _ProdutoEditarState extends State<ProdutoEditar> {
   final TextEditingController nomeController = TextEditingController();
   final TextEditingController descController = TextEditingController();
   final TextEditingController estoqueController = TextEditingController();
@@ -88,7 +88,7 @@ class _ProdutoDetalhesState extends State<ProdutoDetalhes> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text("Detalhes Produto ${widget.produtoId}"),
+        title: Text("Editar Produto ${widget.produtoId}"),
       ),
       body: Container(
         padding: EdgeInsets.all(20),
@@ -100,7 +100,6 @@ class _ProdutoDetalhesState extends State<ProdutoDetalhes> {
                   const Text("Desc: "),
                   Expanded(
                       child: TextField(
-                    readOnly: true,
                     controller: descController,
                   ))
                 ],
@@ -110,7 +109,6 @@ class _ProdutoDetalhesState extends State<ProdutoDetalhes> {
                   const Text("Preço: "),
                   Expanded(
                       child: TextField(
-                    readOnly: true,
                     controller: precoController,
                     keyboardType: TextInputType.number,
                   ))
@@ -121,7 +119,6 @@ class _ProdutoDetalhesState extends State<ProdutoDetalhes> {
                   const Text("Estoque: "),
                   Expanded(
                       child: TextField(
-                    readOnly: true,
                     controller: estoqueController,
                     keyboardType: TextInputType.number,
                   ))
@@ -134,6 +131,18 @@ class _ProdutoDetalhesState extends State<ProdutoDetalhes> {
                       child: TextField(
                     controller: dataController,
                     readOnly: true,
+                    onTap: () async {
+                      DateTime? data = await showDatePicker(
+                          context: context,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                          initialDate: DateTime.now());
+                      if (data != null) {
+                        String formattedDate =
+                            "${data.year}-${data.month}-${data.day}";
+                        dataController.text = formattedDate;
+                      }
+                    },
                   ))
                 ],
               ),
@@ -145,31 +154,37 @@ class _ProdutoDetalhesState extends State<ProdutoDetalhes> {
                 children: [
                   ElevatedButton(
                       onPressed: () async {
-                        bool x = await _mostrarConfirmar(context, "Deletar?");
-                        if (x == true) {
-                          nomeController.clear();
-                          descController.clear();
-                          estoqueController.clear();
-                          dataController.clear();
-                          deletarProdutoPorId(widget.produtoId);
-                          Navigator.pop(context);
+                        String desc = descController.text;
+                        String preco = precoController.text;
+                        String estoque = estoqueController.text;
+                        String data = dataController.text;
+                        num? precoNum = num.tryParse(preco);
+                        num? estoqueNum = int.tryParse(estoque);
+
+                        if (desc == "" ||
+                            preco == "" ||
+                            estoque == "" ||
+                            data == "") {
+                          _mostrarErro(
+                              context, "Nenhum campo deve estar vazio");
+                        } else if (precoNum == null || estoqueNum == null) {
+                          _mostrarErro(context,
+                              "Preço e estoque devem ser numeros, sendo que estoque deve ser um numero inteiro");
+                        } else {
+                          bool x =
+                              await _mostrarConfirmar(context, "Atualizar?");
+                          if (x == true) {
+                            print(preco);
+                            print(desc);
+                            print(estoque);
+                            print(data);
+                            atualizarProdutoPorId(
+                                widget.produtoId, desc, preco, estoque, data);
+                          }
+                          Navigator.pop(context, true);
                         }
                       },
-                      child: const Text("deletar")),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  ElevatedButton(
-                      onPressed: () async {
-                        await Navigator.pushNamed(
-                          context,
-                          '/produto-editar',
-                          arguments: widget.produtoId,
-                        ).then((_) {
-                          _carregarDetalhesProduto(widget.produtoId);
-                        });
-                      },
-                      child: const Text("Editar"))
+                      child: const Text("Atualizar"))
                 ],
               )
             ],

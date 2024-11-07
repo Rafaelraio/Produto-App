@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:produto_app/HTTP/produto.dart';
 import 'package:intl/intl.dart';
 import 'package:produto_app/produto-detalhes.dart';
+import 'package:produto_app/produto-editar.dart';
 import 'package:produto_app/produto.dart';
 
 void main() {
@@ -20,6 +21,11 @@ class MyApp extends StatelessWidget {
           final produtoId =
               ModalRoute.of(context)!.settings.arguments as String;
           return ProdutoDetalhes(produtoId: produtoId);
+        },
+        '/produto-editar': (context) {
+          final produtoId =
+              ModalRoute.of(context)!.settings.arguments as String;
+          return ProdutoEditar(produtoId: produtoId);
         },
       },
       title: 'Produto App',
